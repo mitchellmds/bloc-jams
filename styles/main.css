@@ -30,11 +30,15 @@ html {
      max-width: 64rem;
  }
 
- .clearfix {
-   display: table;
-   content: '';
-   clear: both;
- }
+ .clearfix::before,
+ .clearfix::after {
+    content: " ";
+    display: table;
+}
+
+  .clearfix::after {
+    clear: both;
+}
 
  /* Medium and small screens (640px) */
   @media (min-width: 640px) {
@@ -46,6 +50,7 @@ html {
          padding-left: 1rem;
          padding-right: 1rem;
      }
+
      .column.full { width: 100%; }
      .column.two-thirds { width: 66.7%; }
      .column.half { width: 50%; }
