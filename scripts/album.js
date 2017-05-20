@@ -30,6 +30,21 @@ var albumMarconi = {
     ]
 };
 
+var albumGodOfLamb = {
+    title: 'Resolution',
+    artist: 'God of Lamb',
+    label: 'Sony Music',
+    year: '2012',
+    albumArtUrl: 'assets/images/album_covers/20.png',
+    songs: [
+        { title: 'Straight for the sun', duration: '2:26' },
+        { title: 'Desolation', duration: '3:54' },
+        { title: 'Ghost Walking', duration: '4:30'},
+        { title: 'Guilty', duration: '3:24' },
+        { title: 'The Undertow', duration: '4:46'}
+    ]
+};
+
 var createSongRow = function(songNumber, songName, songLength) {
     var template =
        '<tr class="album-view-song-item">'
@@ -68,3 +83,13 @@ var setCurrentAlbum = function(album) {
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
  };
+
+ var albums = [albumPicasso, albumMarconi, albumGodOfLamb];
+      var index = 1;
+      albumImage.addEventListener("click", function(event) {
+          setCurrentAlbum(albums[index]);
+          index++;
+          if (index == albums.length) {
+            index = 0;
+  }
+     });
