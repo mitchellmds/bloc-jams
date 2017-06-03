@@ -16,27 +16,67 @@ var createSongRow = function(songNumber, songName, songLength) {
 	var songNumber = parseInt($(this).attr('data-song-number'));
 
 
-   if (currentlyPlayingSongNumber !== null) {
-         // Revert to song number for currently playing song because user started playing new song.
-     var currentlyPlayingCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
-     currentlyPlayingCell.html(currentlyPlayingSongNumber);
-     }
-
-
-    if (currentlyPlayingSongNumber !== songNumber) {
-         // Switch from Play -> Pause button to indicate new song is playing.
+  if (currentlyPlayingSongNumber === null) {
        $(this).html(pauseButtonTemplate);
-       currentlyPlayingSongNumber = songNumber;
-       currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+      setSong(songTrackNumber);
        updatePlayerBarSong();
-    } else if (currentlyPlayingSongNumber === songNumber) {
-         // Switch from Pause -> Play button to pause currently playing song.
-      $(this).html(playButtonTemplate);
-      $('.main-controls .play-pause').html(playerBarPlayButton);
-      currentlyPlayingSongNumber = null;
-      currentSongFromAlbum = null;
+   } else if (currentlyPlayingSongNumber === songTrackNumber) {
+       $(this).html(playButtonTemplate);
+       currentlyPlayingSongNumber = null;
+       currentSongFromAlbum = null;
+       $('.main-controls .play-pause').html(playerBarPlayButton);
+   } else if (currentlyPlayingSongNumber !== songTrackNumber) {
+
+            var currentlyPlayingSongElement = getSongNumberCell(currentlyPlayingSongNumber);
+            currentlyPlayingSongElement.empty().text(currentlyPlayingSongNumber);
+       $(this).html(pauseButtonTemplate);
+      setSong(songTrackNumber);
+       updatePlayerBarSong();
+   }
+};
+
+ var setSong = function setSong(songNumber) {
+     currentlyPlayingSongNumber = parseInt(songNumber);
+    var songNumberIndex = parseInt(songNumber - 1);
+    currentSongFromAlbum = currentAlbum.songs[songNumberIndex];
+};
+
+var getSongNumberCell = function getSongNumberCell(number) {
+    var $songNumberCell = $('.song-item-number[data-track-number="' + number + '"]');
+    return $songNumberCell;
+};
+
+var nextSong = function nextSong() {
+     var currentIndex = trackIndex(currentAlbum, currentSongFromAlbum);
+    var $oldSong = getSongNumberCell(currentIndex + 1);
+     var oldSongNumber = parseInt($oldSong.attr('data-track-number'));
+     var $newSong = null;
+
+     currentIndex = 0;
      }
 
+     currentSongFromAlbum = currentAlbum.songs[currentIndex];
+      setSong(currentIndex + 1);
+      $oldSong.html(oldSongNumber);
+     $newSong = getSongNumberCell(currentIndex + 1);
+      $newSong.html(pauseButtonTemplate);
+     updatePlayerBarSong();
+ };
+
+ var previousSong = function previousSong() {
+     var currentIndex = trackIndex(currentAlbum, currentSongFromAlbum);
+    var $oldSong = getSongNumberCell(currentIndex + 1);
+     var oldSongNumber = parseInt($oldSong.attr('data-track-number'));
+     var $newSong = null;
+
+var previousSong = function previousSong() {
+     }
+     setSong(currentIndex + 1);
+     $oldSong.html(oldSongNumber);
+
+    $newSong = getSongNumberCell(currentIndex + 1);
+     $newSong.html(pauseButtonTemplate);
+     updatePlayerBarSong();
  };
 
     var onHover = function(event) {
@@ -100,17 +140,7 @@ var updatePlayerBarSong = function() {
      }
  };
 
- var nextSong = function() {
-     var currentSongIndex = trackIndex(currentAlbum, currentSongFromAlbum);
-     currentSongIndex++;
 
-     if (currentSongIndex >= currentAlbum.songs.length) {
-         currentSongIndex = 0;
-     }
-
-     var lastSongNumber = currentlyPlayingSongNumber;
-     currentlyPlayingSongNumber = currentSongIndex + 1;
-     currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
 
 
      updatePlayerBarSong();
@@ -131,8 +161,7 @@ var updatePlayerBarSong = function() {
     }
 
     var lastSongNumber = currentlyPlayingSongNumber;
-    currentlyPlayingSongNumber = currentSongIndex + 1;
-    currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
+    setSong(currentIndex + 1);
 
     updatePlayerBarSong();
 
